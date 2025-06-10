@@ -3,39 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>傳送專業簡訊</title>
-    
+    <title>專業簡訊發送平台</title>
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <!-- Local Stylesheet -->
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="title-container">
-            <i class="fas fa-paper-plane"></i>
-            <h1>傳送訊息</h1>
-        </div>
-        <form id="messageForm">
-            <div class="form-group">
-                <label for="phoneNumber">收件人號碼 (多筆請用換行分隔)</label>
-                <textarea id="phoneNumber" name="phoneNumber" rows="3" placeholder="例如:
-+85212345678
-+85298765432" required></textarea>
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" id="themeToggle" aria-label="切換主題">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <!-- Main Container -->
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-icon">
+                        <i class="fas fa-paper-plane"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>簡訊發送平台</h1>
+                        <p>專業、快速、可靠</p>
+                    </div>
+                </div>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalSent">0</span>
+                        <span class="stat-label">已發送</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="successRate">100%</span>
+                        <span class="stat-label">成功率</span>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="message">簡訊內容</label>
-                <textarea id="message" name="message" rows="4" placeholder="在此輸入您的訊息..." required></textarea>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-grid">
+                <!-- Left Panel - Form -->
+                <div class="form-panel">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-edit"></i> 編寫訊息</h2>
+                        <div class="panel-actions">
+                            <button class="btn-secondary" id="clearForm">
+                                <i class="fas fa-eraser"></i> 清空
+                            </button>
+                            <button class="btn-secondary" id="loadTemplate">
+                                <i class="fas fa-file-text"></i> 範本
+                            </button>
+                        </div>
+                    </div>
+
+                    <form id="messageForm" class="message-form">
+                        <!-- Phone Numbers Section -->
+                        <div class="form-section">
+                            <div class="form-group">
+                                <label for="phoneNumber" class="form-label">
+                                    <i class="fas fa-phone"></i>
+                                    收件人號碼
+                                    <span class="label-info">支援多筆號碼，每行一個</span>
+                                </label>
+                                <div class="input-wrapper">
+                                    <textarea
+                                        id="phoneNumber"
+                                        name="phoneNumber"
+                                        rows="4"
+                                        placeholder="輸入電話號碼，例如：&#10;+85212345678&#10;+85298765432&#10;或直接輸入：12345678"
+                                        required
+                                        class="form-input"
+                                    ></textarea>
+                                    <div class="input-footer">
+                                        <span class="phone-count">0 個號碼</span>
+                                        <button type="button" class="btn-link" id="validateNumbers">
+                                            <i class="fas fa-check-circle"></i> 驗證格式
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Message Section -->
+                        <div class="form-section">
+                            <div class="form-group">
+                                <label for="message" class="form-label">
+                                    <i class="fas fa-comment-alt"></i>
+                                    簡訊內容
+                                    <span class="label-info">建議保持簡潔明瞭</span>
+                                </label>
+                                <div class="input-wrapper">
+                                    <textarea
+                                        id="message"
+                                        name="message"
+                                        rows="5"
+                                        placeholder="在此輸入您的訊息內容..."
+                                        required
+                                        class="form-input"
+                                        maxlength="1600"
+                                    ></textarea>
+                                    <div class="input-footer">
+                                        <span class="char-count">0 / 1600 字元</span>
+                                        <span class="sms-count">1 則簡訊</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Send Button -->
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary" id="sendButton">
+                                <i class="fas fa-paper-plane"></i>
+                                <span class="btn-text">立即發送</span>
+                                <div class="btn-loader">
+                                    <div class="spinner"></div>
+                                </div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Right Panel - History & Templates -->
+                <div class="side-panel">
+                    <!-- Quick Templates -->
+                    <div class="panel-section">
+                        <h3><i class="fas fa-bookmark"></i> 快速範本</h3>
+                        <div class="template-list">
+                            <div class="template-item" data-template="會議提醒：明天下午2點會議室A開會，請準時參加。">
+                                <i class="fas fa-calendar"></i>
+                                <span>會議提醒</span>
+                            </div>
+                            <div class="template-item" data-template="活動通知：本週六上午10點舉辦團隊活動，歡迎參加！">
+                                <i class="fas fa-bullhorn"></i>
+                                <span>活動通知</span>
+                            </div>
+                            <div class="template-item" data-template="系統維護：系統將於今晚12點進行維護，預計2小時完成。">
+                                <i class="fas fa-tools"></i>
+                                <span>系統維護</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Send History -->
+                    <div class="panel-section">
+                        <h3><i class="fas fa-history"></i> 發送記錄</h3>
+                        <div class="history-list" id="historyList">
+                            <div class="empty-state">
+                                <i class="fas fa-inbox"></i>
+                                <p>尚無發送記錄</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <button type="submit">立即傳送</button>
-        </form>
+        </main>
     </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>正在發送訊息...</p>
+            <div class="loading-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <span class="progress-text" id="progressText">0 / 0</span>
+            </div>
+        </div>
+    </div>
+
     <script src="/script.js"></script>
 </body>
 </html>
