@@ -1,6 +1,6 @@
 
 import os
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, send_from_directory
 from twilio.rest import Client
 from dotenv import load_dotenv
 
@@ -16,27 +16,56 @@ account_sid = os.getenv('TWILIO_ACCOUNT_SID')
 auth_token = os.getenv('TWILIO_AUTH_TOKEN')
 from_number = os.getenv('TWILIO_PHONE_NUMBER')
 
-# Check if Twilio credentials are set
+client = None
+twilio_configured = False
+
 if not all([account_sid, auth_token, from_number]):
-    print("错误：请确保在 .env 文件中设置了 TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, 和 TWILIO_PHONE_NUMBER")
+    error_message = "CRITICAL ERROR: Twilio credentials (TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER) are not fully set in environment variables. SMS sending will be disabled."
+    print(error_message) # Or app.logger.error(error_message) if logger is set up
+    # twilio_configured remains False, client remains None
+else:
+    try:
+        client = Client(account_sid, auth_token)
+        twilio_configured = True
+        print("Twilio client initialized successfully.")
+    except Exception as e:
+        error_message = f"CRITICAL ERROR: Twilio client initialization failed even with credentials. Error: {e}. SMS sending will be disabled."
+        print(error_message) # Or app.logger.error(error_message)
+        # twilio_configured remains False, client remains None
 
-client = Client(account_sid, auth_token)
-
-def format_phone_number(phone_number):
-    """Formats a phone number to E.164, assuming +852 if no country code."""
-    # Remove all non-digit characters
-    phone_number = ''.join(filter(str.isdigit, phone_number))
+def format_phone_number(phone_number_input):
+    print(f"Original phone number received for formatting: {phone_number_input}")
     
-    # If it doesn't start with a country code, assume it's a local HK number
-    if not phone_number.startswith('852') and len(phone_number) == 8:
-         return f"+852{phone_number}"
-    # If it already has the country code but no '+', add it
-    if phone_number.startswith('852'):
-        return f"+{phone_number}"
+    # Preserve the original input if it already has a plus, to avoid stripping it too early
+    # and then re-adding it.
+    if phone_number_input.startswith('+'):
+        # If it starts with '+', assume it's E.164 or user intends international.
+        # Twilio will do the final validation.
+        # We still strip non-digits other than the leading '+'
+        digits_part = ''.join(filter(str.isdigit, phone_number_input[1:]))
+        formatted_number = f"+{digits_part}"
+        print(f"Number started with '+', processed to: {formatted_number}")
+        return formatted_number
 
-    if not phone_number.startswith('+'):
-        return f"+{phone_number}"
-    return phone_number
+    # For numbers not starting with '+', strip all non-digits
+    digits = ''.join(filter(str.isdigit, phone_number_input))
+
+    if len(digits) == 8 and not digits.startswith('852'): # Common case for HK numbers without prefix
+        print(f"Applied 8-digit HK rule for {phone_number_input} (digits: {digits}). Formatting to +852{digits}")
+        return f"+852{digits}"
+
+    if digits.startswith('852'): # Handles cases like "85212345678"
+        # This ensures that if '852' is present, it gets a '+' prefix if it didn't have one.
+        formatted_number = f"+{digits}"
+        print(f"Number contained '852' (original: {phone_number_input}, digits: {digits}), formatted to: {formatted_number}")
+        return formatted_number
+
+    # For any other case not starting with '+', prefix with '+'
+    # e.g., "14155552671" -> "+14155552671"
+    # This also covers cases where digits might be less than 8 and not HK, or other country codes without a +
+    formatted_number = f"+{digits}"
+    print(f"Default prefixing with '+' for {phone_number_input} (digits: {digits}), formatted to: {formatted_number}")
+    return formatted_number
 
 
 @app.route('/')
@@ -44,8 +73,24 @@ def index():
     # Serve the main HTML page
     return render_template('index.html')
 
+@app.route('/style.css')
+def serve_css():
+    return send_from_directory('..', 'style.css', mimetype='text/css')
+
+@app.route('/script.js')
+def serve_js():
+    return send_from_directory('..', 'script.js', mimetype='application/javascript')
+
+@app.route('/sw.js')
+def serve_sw():
+    return send_from_directory('..', 'sw.js', mimetype='application/javascript')
+
 @app.route('/send', methods=['POST'])
 def send_sms():
+    if not twilio_configured or client is None:
+        print("Attempted to send SMS, but Twilio is not configured. Aborting.")
+        return jsonify({'success': False, 'error': '服务配置不正确，无法发送短信。请联系管理员。', 'type': 'CONFIG_ERROR'}), 503
+
     data = request.get_json()
     to_number = data.get('phoneNumber')
     message_body = data.get('message')
