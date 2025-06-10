@@ -21,43 +21,49 @@ body {
     max-width: 550px;
 }
 
-.cbutton[type="submit"]:disabled {
+button[type="submit"]:disabled {
     background-color: #9ca3af;
     cursor: not-allowed;
 }
 
 /* Log Container Styling */
 .log-container {
-    background-color: #ffffff;
-    padding: 1.5rem 2rem;
-    border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 550px;
-    margin-top: 2rem; /* Add space between form and log */
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb; /* Add a separator line */
 }
 
 .log-container h2 {
-    font-size: 1.25rem;
+    font-size: 1.1rem; /* Reduced font size for the title */
     font-weight: 600;
-    color: #1c294c;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #e5e7eb;
+    color: #374151;
+    margin: 0 0 1rem 0;
 }
 
 #logOutput {
-    background-color: #1f2937; /* A dark terminal-like background */
-    color: #d1d5db; /* Light gray text */
+    background-color: #111827; /* Darker background for the log box */
+    color: #9ca3af; /* Softer text color */
     padding: 1rem;
-    border-radius: 8px;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 0.875rem;
-    white-space: pre-wrap; /* Wrap long lines */
-    word-wrap: break-word; /* Break words if necessary */
+    border-radius: 6px;
+    font-family: "SF Mono", "Fira Code", "Courier New", monospace;
+    font-size: 0.8rem; /* Smaller font for log entries */
+    white-space: pre-wrap;
+    word-wrap: break-word;
     min-height: 100px;
-    max-height: 300px; /* Limit height and make it scrollable */
-    overflow-y: auto;   /* Add vertical scrollbar when content overflows */
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+#logOutput div {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.1rem 0;
+    line-height: 1.5;
+}
+
+#logOutput i {
+    margin-top: 0.25rem; /* Align icon with text */
 }
 
 /* Title styling */
