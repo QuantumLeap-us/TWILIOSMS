@@ -1,6 +1,6 @@
 
 import os
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, send_from_directory
 from twilio.rest import Client
 from dotenv import load_dotenv
 
@@ -43,6 +43,18 @@ def format_phone_number(phone_number):
 def index():
     # Serve the main HTML page
     return render_template('index.html')
+
+@app.route('/style.css')
+def serve_css():
+    return send_from_directory('..', 'style.css', mimetype='text/css')
+
+@app.route('/script.js')
+def serve_js():
+    return send_from_directory('..', 'script.js', mimetype='application/javascript')
+
+@app.route('/sw.js')
+def serve_sw():
+    return send_from_directory('..', 'sw.js', mimetype='application/javascript')
 
 @app.route('/send', methods=['POST'])
 def send_sms():
