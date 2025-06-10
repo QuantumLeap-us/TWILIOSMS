@@ -15,9 +15,9 @@ class SMSApp {
 
     init() {
         this.setupEventListeners();
-        this.setupTheme();
-        this.updateStats();
-        this.renderHistory();
+        // this.setupTheme(); // Disabled: Missing HTML elements for theme toggle
+        // this.updateStats(); // Disabled: Missing HTML elements for stats display
+        // this.renderHistory(); // Disabled: Missing HTML elements for history display
         this.setupFormValidation();
     }
 
@@ -25,22 +25,31 @@ class SMSApp {
         // Form submission
         document.getElementById('messageForm').addEventListener('submit', (e) => this.handleSubmit(e));
 
-        // Theme toggle
-        document.getElementById('themeToggle').addEventListener('click', () => this.toggleTheme());
+        // The following features are not supported by the current HTML and have been disabled
+        // to prevent errors. To re-enable them, add the corresponding HTML elements.
 
-        // Form controls
-        document.getElementById('clearForm').addEventListener('click', () => this.clearForm());
-        document.getElementById('loadTemplate').addEventListener('click', () => this.showTemplateModal());
-        document.getElementById('validateNumbers').addEventListener('click', () => this.validatePhoneNumbers());
+        // // Theme toggle
+        // const themeToggle = document.getElementById('themeToggle');
+        // if (themeToggle) themeToggle.addEventListener('click', () => this.toggleTheme());
 
-        // Template selection
-        document.querySelectorAll('.template-item').forEach(item => {
-            item.addEventListener('click', () => this.selectTemplate(item.dataset.template));
-        });
+        // // Form controls
+        // const clearForm = document.getElementById('clearForm');
+        // if (clearForm) clearForm.addEventListener('click', () => this.clearForm());
+        
+        // const loadTemplate = document.getElementById('loadTemplate');
+        // if (loadTemplate) loadTemplate.addEventListener('click', () => this.showTemplateModal());
+        
+        // const validateNumbers = document.getElementById('validateNumbers');
+        // if (validateNumbers) validateNumbers.addEventListener('click', () => this.validatePhoneNumbers());
 
-        // Real-time validation and counters
-        document.getElementById('phoneNumber').addEventListener('input', () => this.updatePhoneCount());
-        document.getElementById('message').addEventListener('input', () => this.updateCharCount());
+        // // Template selection
+        // document.querySelectorAll('.template-item').forEach(item => {
+        //     item.addEventListener('click', () => this.selectTemplate(item.dataset.template));
+        // });
+
+        // // Real-time validation and counters - these also rely on non-existent HTML elements
+        // document.getElementById('phoneNumber').addEventListener('input', () => this.updatePhoneCount());
+        // document.getElementById('message').addEventListener('input', () => this.updateCharCount());
 
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => this.handleKeyboardShortcuts(e));
