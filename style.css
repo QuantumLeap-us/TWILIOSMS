@@ -34,7 +34,7 @@ button[type="submit"]:disabled {
 }
 
 .log-container h2 {
-    font-size: 1.1rem; /* Reduced font size for the title */
+    font-size: 0.9rem; /* Reduced font size for the title */
     font-weight: 600;
     color: #374151;
     margin: 0 0 1rem 0;
