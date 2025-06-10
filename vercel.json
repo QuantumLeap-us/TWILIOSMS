@@ -7,7 +7,23 @@
     ],
     "routes": [
         {
-            "src": "/(.*)",
+            "src": "/style.css",
+            "dest": "/style.css"
+        },
+        {
+            "src": "/script.js",
+            "dest": "/script.js"
+        },
+        {
+            "src": "/sw.js",
+            "dest": "/sw.js"
+        },
+        {
+            "src": "/send",
+            "dest": "api/index.py"
+        },
+        {
+            "src": "/",
             "dest": "api/index.py"
         }
     ]
