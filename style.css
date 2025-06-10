@@ -21,6 +21,45 @@ body {
     max-width: 550px;
 }
 
+.cbutton[type="submit"]:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+}
+
+/* Log Container Styling */
+.log-container {
+    background-color: #ffffff;
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 550px;
+    margin-top: 2rem; /* Add space between form and log */
+}
+
+.log-container h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1c294c;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+#logOutput {
+    background-color: #1f2937; /* A dark terminal-like background */
+    color: #d1d5db; /* Light gray text */
+    padding: 1rem;
+    border-radius: 8px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.875rem;
+    white-space: pre-wrap; /* Wrap long lines */
+    word-wrap: break-word; /* Break words if necessary */
+    min-height: 100px;
+    max-height: 300px; /* Limit height and make it scrollable */
+    overflow-y: auto;   /* Add vertical scrollbar when content overflows */
+}
+
 /* Title styling */
 .title-container {
     display: flex;
