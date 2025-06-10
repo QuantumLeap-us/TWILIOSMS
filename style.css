@@ -86,7 +86,12 @@ textarea:focus {
 
 textarea {
     resize: vertical;
-    min-height: 100px;
+    min-height: 100px; /* Default for textareas like 'message' */
+}
+
+/* Specific styling for the phone number textarea */
+#phoneNumber {
+    min-height: 80px; /* Adjusted for ~3-4 lines of phone numbers */
 }
 
 button {
