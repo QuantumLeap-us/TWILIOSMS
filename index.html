@@ -24,10 +24,10 @@
         </div>
         <form id="messageForm">
             <div class="form-group">
-                <label for="phoneNumber">收件人號碼 (多筆請用換行分隔)</label>
+                <label for="phoneNumber">收件人號碼</label>
                 <textarea id="phoneNumber" name="phoneNumber" rows="3" placeholder="例如:
-97802025
-96505195" required></textarea>
+97808888
+97807777" required></textarea>
             </div>
             <div class="form-group">
                 <label for="message">簡訊內容</label>
@@ -35,6 +35,10 @@
             </div>
             <button type="submit">立即傳送</button>
         </form>
+        <div class="log-container">
+            <h2>傳送日誌</h2>
+            <pre id="logOutput" aria-live="polite">等待傳送任務...</pre>
+        </div>
     </div>
     <script src="/script.js"></script>
 </body>
