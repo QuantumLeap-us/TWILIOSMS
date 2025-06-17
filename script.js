@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
         for (const number of phoneNumbers) {
             const trimmedNumber = number.trim();
             try {
-                const response = await fetch('/api/send', {
+                const response = await fetch('/send', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ phoneNumber: trimmedNumber, message: message }),
